@@ -14,9 +14,16 @@
 
     <p v-if="mensaje" :style="{ color: mensajeColor }">{{ mensaje }}</p>
 
+    <input
+      v-model="filtro"
+      type="text"
+      placeholder="Buscar por código o descripción"
+      class="busqueda"
+    />
+
     <h3>Piezas registradas:</h3>
     <ul>
-      <li v-for="pieza in piezas" :key="pieza.id">
+      <li v-for="pieza in piezasFiltradas" :key="pieza.id">
         <strong>{{ pieza.codigo }}</strong> - {{ pieza.descripcion }} | Stock: {{ pieza.stock }} | Ubicación: {{ pieza.ubicacion }}
 
         <div v-if="puedeModificar" class="acciones">
@@ -31,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { auth, db } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import {
@@ -43,11 +50,20 @@ const descripcion = ref('')
 const stock = ref(0)
 const ubicacion = ref('')
 const piezas = ref([])
+const filtro = ref('')
 const rol = ref('')
 const puedeModificar = ref(false)
 const nombreUsuario = ref('')
 const mensaje = ref('')
 const mensajeColor = ref('')
+
+const piezasFiltradas = computed(() => {
+  if (!filtro.value) return piezas.value
+  return piezas.value.filter(p =>
+    p.codigo.toLowerCase().includes(filtro.value.toLowerCase()) ||
+    p.descripcion.toLowerCase().includes(filtro.value.toLowerCase())
+  )
+})
 
 const cargarPiezas = async () => {
   const querySnapshot = await getDocs(collection(db, 'inventario'))
@@ -163,6 +179,13 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+}
+.busqueda {
+  width: 100%;
+  padding: 8px;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 .acciones {
   margin-top: 8px;
