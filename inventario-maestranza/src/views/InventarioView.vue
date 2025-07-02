@@ -9,6 +9,8 @@
       <input v-model="descripcion" placeholder="Descripción" required />
       <input v-model.number="stock" placeholder="Cantidad inicial" type="number" required />
       <input v-model="ubicacion" placeholder="Ubicación" required />
+      <input v-model="proveedorContacto" placeholder="Proveedor (teléfono o sitio)" required />
+      <input v-model.number="stockMinimo" type="number" placeholder="Stock mínimo para alerta" min="0" required />
       <button type="submit">Agregar nueva pieza</button>
     </form>
 
@@ -24,7 +26,11 @@
     <h3>Piezas registradas:</h3>
     <ul>
       <li v-for="pieza in piezasFiltradas" :key="pieza.id">
-        <strong>{{ pieza.codigo }}</strong> - {{ pieza.descripcion }} | Stock: {{ pieza.stock }} | Ubicación: {{ pieza.ubicacion }}
+        <strong>{{ pieza.codigo }}</strong> - {{ pieza.descripcion }} | 
+        Stock: {{ pieza.stock }} | 
+        Ubicación: {{ pieza.ubicacion }} |
+        Proveedor: {{ pieza.proveedorContacto || 'N/D' }} |
+        Stock mínimo: {{ pieza.stockMinimo || 'No definido' }}
 
         <div v-if="puedeModificar" class="acciones">
           <input v-model.number="pieza.cantidadCambio" type="number" min="1" placeholder="Cantidad" class="cantidad-input" />
@@ -49,6 +55,9 @@ const codigo = ref('')
 const descripcion = ref('')
 const stock = ref(0)
 const ubicacion = ref('')
+const proveedorContacto = ref('')
+const stockMinimo = ref(0)
+
 const piezas = ref([])
 const filtro = ref('')
 const rol = ref('')
@@ -110,6 +119,8 @@ const agregarPieza = async () => {
     descripcion: descripcion.value,
     stock: stock.value,
     ubicacion: ubicacion.value,
+    proveedorContacto: proveedorContacto.value,
+    stockMinimo: stockMinimo.value,
     fecha: serverTimestamp()
   }
 
@@ -119,12 +130,15 @@ const agregarPieza = async () => {
   mensaje.value = '✅ Pieza agregada correctamente.'
   mensajeColor.value = 'green'
 
+  // Reset
   codigo.value = ''
   descripcion.value = ''
   stock.value = 0
   ubicacion.value = ''
-  await cargarPiezas()
+  proveedorContacto.value = ''
+  stockMinimo.value = 0
 
+  await cargarPiezas()
   setTimeout(() => mensaje.value = '', 3000)
 }
 

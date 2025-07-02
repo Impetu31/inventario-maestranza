@@ -163,6 +163,24 @@ const calcularKitsPosibles = (kit) => {
 }
 
 const exportarPDF = () => {
+  const errores = []
+
+  selectedKits.value.forEach(kit => {
+    const cantidad = kitQuantities.value[kit.id] || 1
+    const maxKits = calcularKitsPosibles(kit)
+    if (cantidad > maxKits) {
+      errores.push(`❌ No puedes armar ${cantidad} kits de "${kit.nombre}". Máximo permitido: ${maxKits}.`)
+    } else if (cantidad <= 0) {
+      errores.push(`❌ Cantidad inválida para el kit "${kit.nombre}". Debe ser al menos 1.`)
+    }
+  })
+
+  if (errores.length) {
+    mensajeExito.value = errores.join('\n')
+    setTimeout(() => mensajeExito.value = '', 6000)
+    return
+  }
+
   const doc = new jsPDF()
   doc.setFontSize(16)
   doc.text('Listado de Kits para Bodega', 14, 20)
@@ -276,5 +294,6 @@ li {
   border-radius: 5px;
   margin-top: 10px;
   text-align: center;
+  white-space: pre-wrap;
 }
 </style>
