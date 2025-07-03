@@ -1,5 +1,7 @@
 <template>
   <div class="dashboard">
+    <img src="../assets/logo.png" alt="Logo Maestranza" class="logo" />
+
     <h2>Bienvenido al Panel Principal</h2>
     <p>Aquí se mostrarán los accesos al sistema según tu rol.</p>
 
@@ -70,6 +72,12 @@ onMounted(async () => {
   max-width: 600px;
   margin: 40px auto;
   font-family: Arial;
+  text-align: center;
+}
+.logo {
+  width: 180px;
+  max-width: 90%;
+  margin-bottom: 20px;
 }
 h3 {
   margin-top: 20px;

@@ -1,5 +1,7 @@
 <template>
   <div class="registro">
+    <img src="../assets/logo.png" alt="Logo Maestranza" class="logo" />
+
     <h2>Registro de Usuario</h2>
     <form @submit.prevent="registrarUsuario">
       <input v-model="nombre" type="text" placeholder="Nombre completo" required />
@@ -79,6 +81,12 @@ const registrarUsuario = async () => {
   border: 1px solid #ccc;
   border-radius: 10px;
   font-family: Arial;
+  text-align: center;
+}
+.logo {
+  width: 180px;
+  max-width: 90%;
+  margin-bottom: 20px;
 }
 form {
   display: flex;
